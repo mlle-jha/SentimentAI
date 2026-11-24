@@ -317,9 +317,7 @@ textarea:focus {
     height: 125px;
     border-radius: 50%;
     background: conic-gradient(
-        #f472b6 0% 65%,
-        #93c5fd 65% 85%,
-        #fda4af 85% 100%
+    #38222f 0% 100%
     );
     display: flex;
     align-items: center;
@@ -469,4 +467,239 @@ textarea:focus {
     .or-badge {
         margin: 0 auto;
     }
+}
+
+.input-area {
+    display: grid;
+    grid-template-columns: 1.5fr 0.85fr;
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.text-input-card,
+.pdf-input-card {
+    min-width: 0;
+    padding: 1.6rem;
+    background: linear-gradient(145deg, #1e141c, #160f15);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+.text-input-card:hover,
+.pdf-input-card:hover {
+    border-color: rgba(244, 114, 182, 0.5);
+}
+
+.input-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.3rem;
+}
+
+.input-eyebrow {
+    display: block;
+    color: var(--pink);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.55rem;
+}
+
+.input-heading h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+}
+
+.input-heading p {
+    color: var(--text-gray);
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+
+.input-heading-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    color: var(--pink-light);
+    background: rgba(244, 114, 182, 0.12);
+    border: 1px solid rgba(244, 114, 182, 0.2);
+    font-size: 1.3rem;
+}
+
+.text-input-card .text-box-wrapper textarea {
+    height: 190px;
+    background: #120c11;
+    border: 1px solid #432a39;
+    border-radius: 12px;
+    line-height: 1.7;
+    padding: 1.1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.text-input-card textarea:focus {
+    border-color: var(--pink);
+    box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.08);
+}
+
+.input-footer {
+    margin-top: 0.8rem;
+}
+
+.keyboard-hint {
+    color: var(--text-gray);
+    font-size: 0.72rem;
+}
+
+kbd {
+    padding: 3px 6px;
+    color: var(--pink-light);
+    background: #2a1a25;
+    border: 1px solid #503448;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 0.68rem;
+}
+
+/* PDF upload */
+
+.pdf-dropzone {
+    min-height: 190px;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-align: center;
+    background: rgba(244, 114, 182, 0.035);
+    border: 1.5px dashed #70465f;
+    border-radius: 13px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.pdf-dropzone:hover,
+.pdf-dropzone.drag-over {
+    background: rgba(244, 114, 182, 0.1);
+    border-color: var(--pink);
+}
+
+.pdf-upload-icon {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 0.2rem;
+    border-radius: 12px;
+    background: rgba(244, 114, 182, 0.13);
+    color: var(--pink-light);
+    font-size: 1.6rem;
+}
+
+.pdf-dropzone strong {
+    font-size: 0.88rem;
+}
+
+.pdf-dropzone > span:not(.browse-btn) {
+    color: var(--text-gray);
+    font-size: 0.75rem;
+}
+
+.pdf-dropzone small {
+    color: var(--text-gray);
+    font-size: 0.68rem;
+}
+
+.browse-btn {
+    margin-top: 0.35rem;
+    padding: 0.55rem 1.2rem;
+    background: var(--pink-light);
+    color: #1c0b14;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.selected-file {
+    margin-top: 0.9rem;
+    color: var(--text-gray);
+    font-size: 0.75rem;
+    overflow-wrap: anywhere;
+}
+
+.selected-file.has-file {
+    color: var(--pink-light);
+}
+
+/* Analyze button */
+
+.input-area .action-row {
+    grid-column: 1 / -1;
+    margin-top: 0;
+}
+
+.analyze-btn {
+    min-width: 230px;
+    padding: 0.9rem 2rem;
+    border-radius: 11px;
+    font-size: 0.9rem;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+
+.analyze-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 25px rgba(244, 114, 182, 0.35);
+}
+
+.analyze-btn:disabled {
+    opacity: 0.65;
+    cursor: wait;
+    transform: none;
+}
+
+/* Responsive */
+
+@media (max-width: 960px) {
+    .input-area {
+        grid-template-columns: 1fr;
+    }
+
+    .input-area .action-row {
+        grid-column: 1;
+    }
+}
+
+@media (max-width: 600px) {
+    .main-wrapper {
+        padding: 1.2rem;
+    }
+
+    .text-input-card,
+    .pdf-input-card {
+        padding: 1.1rem;
+    }
+
+    .text-input-card .text-box-wrapper textarea {
+        height: 160px;
+    }
+
+    .keyboard-hint {
+        font-size: 0.65rem;
+    }
+
+    .analyze-btn {
+        width: 100%;
+    }
+}
+.empty-result {
+    color: var(--text-gray);
+    font-size: 0.8rem;
+    font-style: italic;
 }

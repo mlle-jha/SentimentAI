@@ -16,11 +16,13 @@ PDF endpoint:
 
 from pathlib import Path
 from tempfile import NamedTemporaryFile
+from unittest import result
 
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
 from text_processor import analyze_pdf, analyze_text
+from sentiment_analyzer import analyze_sentiment
 
 # APPLICATION CONFIGURATION
 BASE_DIR = Path(__file__).resolve().parent
@@ -68,6 +70,8 @@ def analyze_manual_text():
 
     try:
         result = analyze_text(text)
+        # Run AI sentiment analysis on the original text
+        result["sentiment"] = analyze_sentiment(text)
         return jsonify(result)
 
     except (ValueError, TypeError) as error:
@@ -97,6 +101,8 @@ def analyze_uploaded_pdf():
             temp_path = Path(temp_file.name)
 
         result = analyze_pdf(temp_path)
+        # Run AI sentiment analysis on the extracted PDF text
+        result["sentiment"] = analyze_sentiment(result["extracted_text"])
 
         return jsonify(result)
 

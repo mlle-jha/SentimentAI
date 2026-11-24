@@ -45,49 +45,82 @@
             <div class="hero-graphic">🧠</div>
         </header>
 
-        <section class="panel input-panel">
-            <div class="tab-header">
-                <span class="tab active-tab">✏️ Paste Text</span>
-                <span class="tab">📄 Upload PDF</span>
-            </div>
+        
+        <section class="input-area">
 
-            <div class="input-split">
+            <!-- Text Analysis Panel -->
+            <div class="panel text-input-card">
+                <div class="input-heading">
+                    <div>
+                        <span class="input-eyebrow">01 / TEXT ANALYSIS</span>
+                        <h3>What would you like to analyze?</h3>
+                        <p>Paste or write text below to discover its sentiment.</p>
+                    </div>
+                    <div class="input-heading-icon">✎</div>
+                </div>
+
                 <div class="text-box-wrapper">
                     <textarea
                         id="manualText"
                         maxlength="5000"
-                        placeholder="Type or paste your text here..."
+                        placeholder="Start typing or paste your text here..."
                     ></textarea>
-                    <span class="char-limit">0 / 5000</span>
+                    <span class="char-limit" id="charCounter">0 / 5000</span>
                 </div>
 
-                <div class="or-badge">OR</div>
-
-                <div class="pdf-dropzone" id="dropZone">
-                    <div class="cloud-icon">☁️</div>
-                    <p class="drop-title">Drag &amp; drop your PDF here</p>
-                    <span class="drop-sub">or</span>
-                    <label for="pdfUpload" class="browse-btn">Browse Files</label>
-                    <input type="file" id="pdfUpload" accept=".pdf" hidden>
+                <div class="input-footer">
+                    <span class="keyboard-hint">
+                        Press <kbd>Enter</kbd> to analyze · <kbd>Shift + Enter</kbd> for a new line
+                    </span>
                 </div>
             </div>
 
+            <!-- PDF Upload Panel -->
+            <div class="panel pdf-input-card">
+                <div class="input-heading">
+                    <div>
+                        <span class="input-eyebrow">02 / DOCUMENT ANALYSIS</span>
+                        <h3>Have a PDF instead?</h3>
+                        <p>Upload a document and let AI analyze its contents.</p>
+                    </div>
+                    <div class="input-heading-icon">📄</div>
+                </div>
+
+                <label for="pdfUpload" class="pdf-dropzone" id="dropZone">
+                    <div class="pdf-upload-icon">↑</div>
+                    <strong>Drop your PDF here</strong>
+                    <span>or browse your files</span>
+                    <span class="browse-btn">Choose PDF</span>
+                    <small>PDF files only</small>
+                </label>
+
+                <input type="file" id="pdfUpload" accept=".pdf" hidden>
+
+                <p class="selected-file" id="selectedFile">
+                    No document selected
+                </p>
+            </div>
+
+            <!-- Shared Analyze Button -->
             <div class="action-row">
                 <button type="button" class="analyze-btn" id="analyzeBtn">
-                    ✦ Analyze Sentiment &rsaquo;
+                    ✦ Analyze Sentiment →
                 </button>
             </div>
+
         </section>
+
 
         <section class="results-grid">
 
             <div class="panel result-card">
                 <h4>Sentiment Overview</h4>
                 <div class="sentiment-body">
+                    
                     <div class="donut-ring" id="sentimentChart">
                         <div class="donut-hole">
                             <span class="donut-sub">Overall<br>Sentiment</span>
-                            <strong class="donut-main" id="overallSentiment">Positive</strong>
+                            <strong class="donut-main" id="overallSentiment">---</strong>
                         </div>
                     </div>
 
@@ -95,19 +128,20 @@
                         <li>
                             <span class="dot dot-pos"></span>
                             <span class="lbl">Positive</span>
-                            <strong id="posPercent">65%</strong>
+                            <strong id="posPercent">--</strong>
                         </li>
                         <li>
                             <span class="dot dot-neu"></span>
                             <span class="lbl">Neutral</span>
-                            <strong id="neuPercent">20%</strong>
+                            <strong id="neuPercent">--</strong>
                         </li>
                         <li>
                             <span class="dot dot-neg"></span>
                             <span class="lbl">Negative</span>
-                            <strong id="negPercent">15%</strong>
+                            <strong id="negPercent">--</strong>
                         </li>
                     </ul>
+
                 </div>
             </div>
 
@@ -118,7 +152,7 @@
                         <div class="stat-icon">📄</div>
                         <div>
                             <span class="stat-label">Total Words</span>
-                            <strong class="stat-value" id="totalWords">1,248</strong>
+                            <strong class="stat-value" id="totalWords">0</strong>
                         </div>
                     </div>
 
@@ -126,7 +160,7 @@
                         <div class="stat-icon">💬</div>
                         <div>
                             <span class="stat-label">Total Sentences</span>
-                            <strong class="stat-value" id="totalSentences">72</strong>
+                            <strong class="stat-value" id="totalSentences">0</strong>
                         </div>
                     </div>
 
@@ -134,7 +168,7 @@
                         <div class="stat-icon">Aa</div>
                         <div>
                             <span class="stat-label">Total Characters</span>
-                            <strong class="stat-value" id="totalChars">6,842</strong>
+                            <strong class="stat-value" id="totalChars">0</strong>
                         </div>
                     </div>
                 </div>
@@ -144,19 +178,14 @@
                 <div class="panel keywords-card">
                     <h4>Top Keywords</h4>
                     <div class="pill-container" id="keywordsContainer">
-                        <span class="keyword-pill">great</span>
-                        <span class="keyword-pill">love</span>
-                        <span class="keyword-pill">amazing</span>
-                        <span class="keyword-pill">service</span>
-                        <span class="keyword-pill">product</span>
-                        <span class="keyword-pill">experience</span>
+                        <span class="empty-result">No keywords yet</span>
                     </div>
                 </div>
 
                 <div class="insights-card">
                     <div class="insight-title">✦ AI Insights</div>
                     <p id="aiInsights">
-                        The overall sentiment is positive, with many users expressing satisfaction and appreciation.
+                        Your AI-generated sentiment interpretation will appear here after analysis.
                     </p>
                 </div>
             </div>
