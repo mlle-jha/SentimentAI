@@ -1,5 +1,4 @@
-
-@import url('https://googleapis.com');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
     --bg-dark: #0d080b;
@@ -79,6 +78,8 @@ body {
     font-size: 0.9rem;
     font-weight: 500;
     transition: 0.2s;
+    cursor: pointer;
+    border: 1px solid transparent;
 }
 
 .nav-link:hover {
@@ -458,6 +459,43 @@ textarea:focus {
     font-size: 0.8rem;
     color: #e2d5dc;
     line-height: 1.45;
+}
+
+/* Page Switching & History Table */
+.page-radio, .page-section {
+    display: none;
+}
+
+#nav-analyze:checked ~ .main-wrapper .section-analyze,
+#nav-about:checked ~ .main-wrapper .section-about,
+#nav-history:checked ~ .main-wrapper .section-history {
+    display: block;
+}
+
+#nav-analyze:checked ~ .sidebar .link-analyze,
+#nav-about:checked ~ .sidebar .link-about,
+#nav-history:checked ~ .sidebar .link-history {
+    background: linear-gradient(90deg, rgba(244, 114, 182, 0.32), rgba(244, 114, 182, 0.08));
+    color: var(--text-white);
+    border: 1px solid rgba(244, 114, 182, 0.45);
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.85rem;
+}
+
+.history-table th {
+    color: var(--text-gray);
+    padding: 0.8rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.history-table td {
+    padding: 0.9rem 0.8rem;
+    border-bottom: 1px solid rgba(56, 34, 47, 0.5);
 }
 
 /* Responsive adjustment for smaller screens */
