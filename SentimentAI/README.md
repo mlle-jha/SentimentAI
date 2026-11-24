@@ -83,3 +83,51 @@ Your frontend JavaScript can call the API and display the returned metrics. The 
 - PyMuPDF extracts selectable PDF text. Scanned/image-only PDFs need OCR, which is not included in this assigned scope.
 - The sample NLP pipeline is configured for English.
 - `total_characters` includes spaces and punctuation; `total_words` is counted from the original text, before stopword removal.
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+# SentimentAI — Cassey's Sentiment Classification Module
+
+## What this part does
+
+- Uses a pretrained DistilBERT model for sentiment classification.
+- Classifies text into Positive, Negative, or Neutral.
+- Analyzes individual sentences and identifies their predicted sentiment.
+- Calculates sentiment counts and percentages.
+- Determines the overall sentiment of the submitted text.
+- Provides confidence scores and an interpretation of the results.
+
+## 1. Model Used
+
+**Model:** `iam-tsr/distilbert-finetuned-sentiment-analysis`
+
+**Framework:** Hugging Face Transformers
+
+The model is pretrained and supports three sentiment labels: POSITIVE, NEGATIVE, and NEUTRAL.
+
+## 2. How It Works
+
+1. Receives the original text from the Flask API.
+2. Splits the text into individual sentences.
+3. Passes each sentence to the pretrained sentiment-classification model.
+4. Retrieves the predicted sentiment and confidence scores.
+5. Calculates the percentage of each sentiment.
+6. Determines the overall sentiment and generates an interpretation.
+
+## 3. Integration
+
+The sentiment-classification component is implemented in:
+
+`backend/sentiment_analyzer.py`
+
+It is integrated with the text-processing module through `app.py`.
+
+The API returns the text-processing results together with a `sentiment` object containing the classification results.
+
+## 4. Limitations
+
+- Predictions may be affected by spelling mistakes and typos.
+- The model may not always understand sarcasm, context, or complex expressions.
+- Confidence scores do not represent actual model accuracy.
+- The current implementation is intended primarily for English text.
+- Formal accuracy evaluation requires a labeled testing dataset.
