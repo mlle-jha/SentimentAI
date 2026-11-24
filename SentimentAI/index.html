@@ -3,46 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SentimentAI - AI-Powered Sentiment Analysis</title>
+    <title>SentimentAI</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <aside class="sidebar">
-        <div class="sidebar-top">
-            <div class="brand">
-                <div class="brand-logo">✦</div>
-                <h2>SentimentAI</h2>
-                <p>Understand<br>What People Feel</p>
-            </div>
 
-            <nav class="nav-menu">
-                <a href="#" class="nav-link active">
-                    <span class="icon">📊</span> Analyze
-                </a>
-                <a href="#about" class="nav-link">
-                    <span class="icon">ⓘ</span> About
-                </a>
-                <a href="#history" class="nav-link">
-                    <span class="icon">🕒</span> History
-                </a>
+    <input type="radio" name="page" id="p1" class="nav-radio" checked>
+    <input type="radio" name="page" id="p2" class="nav-radio">
+    <input type="radio" name="page" id="p3" class="nav-radio">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div>
+            <div class="brand">
+                <div class="brand-icon">✦</div>
+                <h2>SentimentAI</h2>
+                <p>Understand What People Feel</p>
+            </div>
+            <nav>
+                <label for="p1" class="nav-item l1">📊 Analyze</label>
+                <label for="p2" class="nav-item l2">✨ Insights</label>
+                <label for="p3" class="nav-item l3">🕒 History</label>
             </nav>
         </div>
-
-        <div class="sidebar-bottom">
-            <span class="sparkle">✦</span>
-            <p>Turn Opinions<br>into Insights</p>
+        <div class="sidebar-footer">
+            <span>✦</span>
+            <span>Turn Opinions into Insights</span>
         </div>
     </aside>
 
-    <main class="main-wrapper">
-        <header class="hero-section">
-            <div class="hero-text">
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- PAGE 1: ANALYZE -->
+        <div class="page page-1">
+            <header class="hero">
                 <h3>Welcome to</h3>
                 <h1>SentimentAI</h1>
                 <p>An AI-Powered Sentiment Analysis Tool</p>
-            </div>
-            <div class="hero-graphic">🧠</div>
-        </header>
+            </header>
 
         <section class="panel input-panel">
             <div class="tab-header">
@@ -56,105 +55,147 @@
                     <span class="char-limit">0 / 5000</span>
                 </div>
 
-                <div class="or-badge">OR</div>
-
-                <div class="pdf-dropzone" id="dropZone">
-                    <div class="cloud-icon">☁️</div>
-                    <p class="drop-title">Drag &amp; drop your PDF here</p>
-                    <span class="drop-sub">or</span>
-                    <label for="pdfUpload" class="browse-btn">Browse Files</label>
-                    <input type="file" id="pdfUpload" accept=".pdf" hidden>
+                <div class="input-grid">
+                    <textarea id="textInput" maxlength="5000" placeholder="Type or paste your text here..."></textarea>
+                    <div class="or-divider">OR</div>
+                    <div class="upload-box">
+                        <p>☁️ Drag &amp; drop your PDF here</p>
+                        <input type="file" id="pdfInput" accept=".pdf" hidden>
+                        <button class="browse-btn" onclick="document.getElementById('pdfInput').click()">Browse Files</button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="action-row">
-                <button type="button" class="analyze-btn" id="analyzeBtn">
-                    ✦ Analyze Sentiment &rsaquo;
-                </button>
-            </div>
-        </section>
+                <button class="analyze-btn" id="analyzeBtn">✦ Analyze Sentiment ›</button>
+            </section>
 
-        <section class="results-grid">
-            
-            <div class="panel result-card">
-                <h4>Sentiment Overview</h4>
-                <div class="sentiment-body">
-                    <div class="donut-ring" id="sentimentChart">
-                        <div class="donut-hole">
-                            <span class="donut-sub">Overall<br>Sentiment</span>
-                            <strong class="donut-main" id="overallSentiment">Positive</strong>
+            <section class="results-grid">
+                <div class="card">
+                    <h4>Sentiment Overview</h4>
+                    <div class="overview-flex">
+                        <div class="donut">
+                            <div class="donut-inner">
+                                <span>Overall<br>Sentiment</span>
+                                <strong id="overallLabel">Positive</strong>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="legend-item"><span class="dot" style="background:#f472b6;"></span> Positive <strong id="posPct">65%</strong></div>
+                            <div class="legend-item"><span class="dot" style="background:#93c5fd;"></span> Neutral <strong id="neuPct">20%</strong></div>
+                            <div class="legend-item"><span class="dot" style="background:#fda4af;"></span> Negative <strong id="negPct">15%</strong></div>
                         </div>
                     </div>
-
-                    <ul class="legend-list">
-                        <li>
-                            <span class="dot dot-pos"></span>
-                            <span class="lbl">Positive</span>
-                            <strong id="posPercent">65%</strong>
-                        </li>
-                        <li>
-                            <span class="dot dot-neu"></span>
-                            <span class="lbl">Neutral</span>
-                            <strong id="neuPercent">20%</strong>
-                        </li>
-                        <li>
-                            <span class="dot dot-neg"></span>
-                            <span class="lbl">Negative</span>
-                            <strong id="negPercent">15%</strong>
-                        </li>
-                    </ul>
                 </div>
-            </div>
 
-            <div class="panel result-card">
-                <h4>Key Statistics</h4>
-                <div class="stats-list">
-                    <div class="stat-item">
+                <div class="card">
+                    <h4>Key Statistics</h4>
+                    <div class="stat-row">
                         <div class="stat-icon">📄</div>
-                        <div>
-                            <span class="stat-label">Total Words</span>
-                            <strong class="stat-value" id="totalWords">1,248</strong>
-                        </div>
+                        <div class="stat-info"><span>Total Words</span><strong id="wordCount">1,248</strong></div>
                     </div>
-                    <div class="stat-item">
+                    <div class="stat-row">
                         <div class="stat-icon">💬</div>
-                        <div>
-                            <span class="stat-label">Total Sentences</span>
-                            <strong class="stat-value" id="totalSentences">72</strong>
-                        </div>
+                        <div class="stat-info"><span>Total Sentences</span><strong id="sentenceCount">72</strong></div>
                     </div>
-                    <div class="stat-item">
+                    <div class="stat-row">
                         <div class="stat-icon">Aa</div>
-                        <div>
-                            <span class="stat-label">Total Characters</span>
-                            <strong class="stat-value" id="totalChars">6,842</strong>
+                        <div class="stat-info"><span>Total Characters</span><strong id="charCount">6,842</strong></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="card">
+                        <h4>Top Keywords</h4>
+                        <div class="keywords-wrap" id="keywordsList">
+                            <span class="pill">great</span>
+                            <span class="pill">love</span>
+                            <span class="pill">amazing</span>
+                            <span class="pill">service</span>
+                            <span class="pill">product</span>
+                            <span class="pill">experience</span>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="right-column">
-                <div class="panel keywords-card">
-                    <h4>Top Keywords</h4>
-                    <div class="pill-container" id="keywordsContainer">
-                        <span class="keyword-pill">great</span>
-                        <span class="keyword-pill">love</span>
-                        <span class="keyword-pill">amazing</span>
-                        <span class="keyword-pill">service</span>
-                        <span class="keyword-pill">product</span>
-                        <span class="keyword-pill">experience</span>
+                    <div class="insight-box">
+                        <strong>✦ AI Insights</strong>
+                        <p id="aiInsightText" style="margin-top:4px;">The overall sentiment is positive, with many users expressing satisfaction and appreciation.</p>
                     </div>
                 </div>
+            </section>
+        </div>
 
-                <div class="insights-card">
-                    <div class="insight-title">✦ AI Insights</div>
-                    <p id="aiInsights">
-                        The overall sentiment is positive, with many users expressing satisfaction and appreciation.
-                    </p>
+        <!-- PAGE 2: INSIGHTS -->
+        <div class="page page-2">
+            <header class="hero">
+                <h3>Deep Dive</h3>
+                <h1>Sentiment Insights</h1>
+                <p>Polarity Breakdown &amp; Keyword Frequency</p>
+            </header>
+
+            <div class="results-grid">
+                <div class="card">
+                    <h4>Dominant Sentiment</h4>
+                    <h2 style="color:#f472b6; font-size:2rem;">Positive (65%)</h2>
+                    <p style="color:#a18d99; font-size:0.85rem; margin-top:6px;">Classified via DistilBERT NLP</p>
+                </div>
+                <div class="card">
+                    <h4>Top Frequent Words</h4>
+                    <p style="font-size:0.85rem; margin-bottom:6px;">1. <strong>service</strong> (18x)</p>
+                    <p style="font-size:0.85rem; margin-bottom:6px;">2. <strong>product</strong> (14x)</p>
+                    <p style="font-size:0.85rem;">3. <strong>experience</strong> (11x)</p>
+                </div>
+                <div class="insight-box">
+                    <strong>✦ Summary</strong>
+                    <p style="margin-top:6px;">Positive words strongly outweigh negative feedback across your analyzed documents.</p>
                 </div>
             </div>
+        </div>
 
-        </section>
+        <!-- PAGE 3: HISTORY DASHBOARD -->
+        <div class="page page-3">
+            <header class="hero">
+                <h3>Activity Log</h3>
+                <h1>History Dashboard</h1>
+                <p>Past Analyzed Texts &amp; PDF Documents</p>
+            </header>
+
+            <div class="card">
+                <h4>Recent Analyses</h4>
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Document / Text</th>
+                            <th>Type</th>
+                            <th>Words</th>
+                            <th>Sentiment</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Customer_Feedback.pdf</td>
+                            <td>PDF</td>
+                            <td>1,248</td>
+                            <td><span class="pill">Positive</span></td>
+                            <td>65%</td>
+                        </tr>
+                        <tr>
+                            <td>"Delivery was delayed..."</td>
+                            <td>Text</td>
+                            <td>84</td>
+                            <td><span class="pill">Negative</span></td>
+                            <td>78%</td>
+                        </tr>
+                        <tr>
+                            <td>Product_Specs_v2.pdf</td>
+                            <td>PDF</td>
+                            <td>2,410</td>
+                            <td><span class="pill">Neutral</span></td>
+                            <td>71%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </main>
 <script src="script.js"></script>
 </body>
