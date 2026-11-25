@@ -1,13 +1,49 @@
+
 document.addEventListener("DOMContentLoaded", () => {
   const manualText = document.getElementById("manualText");
   const pdfUpload = document.getElementById("pdfUpload");
   const analyzeBtn = document.getElementById("analyzeBtn");
+  const selectedFileName = document.getElementById("selectedFileName");
+  const charCount = document.getElementById("charCount");
 
   if (!manualText || !pdfUpload || !analyzeBtn) {
     console.error("SentimentAI: Required HTML elements not found.");
     return;
   }
 
+  // Handle PDF selection
+  pdfUpload.addEventListener("change", () => {
+    const file = pdfUpload.files[0];
+
+    if (file) {
+      // Clear manual text when a PDF is selected
+      manualText.value = "";
+
+      if (charCount) {
+        charCount.textContent = "0";
+      }
+
+      selectedFileName.textContent = `Selected: ${file.name}`;
+    } else {
+      selectedFileName.textContent = "PDF files only";
+    }
+  });
+
+  // Handle manual text input
+  manualText.addEventListener("input", () => {
+    // Update character counter
+    if (charCount) {
+      charCount.textContent = manualText.value.length;
+    }
+
+    // Clear PDF selection when user starts typing
+    if (manualText.value.trim() && pdfUpload.files.length > 0) {
+      pdfUpload.value = "";
+      selectedFileName.textContent = "PDF files only";
+    }
+  });
+
+  // Analyze button
   analyzeBtn.addEventListener("click", async () => {
     const text = manualText.value.trim();
     const pdf = pdfUpload.files[0];
@@ -23,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       let response;
 
+      // Analyze PDF
       if (pdf) {
         const formData = new FormData();
         formData.append("file", pdf);
@@ -32,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
           body: formData,
         });
       } else {
+        // Analyze manual text
         response = await fetch("/api/analyze", {
           method: "POST",
           headers: {
@@ -68,18 +106,60 @@ document.addEventListener("DOMContentLoaded", () => {
         keywordsContainer.appendChild(keyword);
       });
 
-      // Update processing insights
+      // Update sentiment overview
+      const percentages = data.sentiment_percentages;
+
+      if (!percentages || !data.overall_sentiment) {
+        throw new Error(
+          "Sentiment results are missing. Please check the backend response."
+        );
+      }
+
+      const positive = Number(percentages.POSITIVE || 0);
+      const neutral = Number(percentages.NEUTRAL || 0);
+      const negative = Number(percentages.NEGATIVE || 0);
+
+      document.getElementById("overallSentiment").textContent =
+        data.overall_sentiment;
+
+      document.getElementById("posPercent").textContent =
+        `${positive.toFixed(2)}%`;
+
+      document.getElementById("neuPercent").textContent =
+        `${neutral.toFixed(2)}%`;
+
+      document.getElementById("negPercent").textContent =
+        `${negative.toFixed(2)}%`;
+
+      // Update donut chart using existing CSS colors
+      const sentimentChart = document.getElementById("sentimentChart");
+
+      const lime = getComputedStyle(document.documentElement)
+        .getPropertyValue("--lime")
+        .trim();
+
+      const pink = getComputedStyle(document.documentElement)
+        .getPropertyValue("--pink")
+        .trim();
+
+      sentimentChart.style.background = `conic-gradient(
+        ${lime} 0% ${positive}%,
+        #d7c8db ${positive}% ${positive + neutral}%,
+        ${pink} ${positive + neutral}% 100%
+      )`;
+
+      // Update AI insights
       const insights = document.getElementById("aiInsights");
 
       if (insights) {
         insights.textContent =
-          "Text processing completed successfully. " +
-          "Your document is ready for sentiment classification.";
+          data.interpretation ||
+          "Sentiment analysis completed successfully.";
       }
 
-      // SAVE ANALYSIS TO HISTORY
+      // Save analysis to history
       const history = JSON.parse(
-        localStorage.getItem("sentimentHistory") || "[]",
+        localStorage.getItem("sentimentHistory") || "[]"
       );
 
       const historyEntry = {
@@ -90,18 +170,25 @@ document.addEventListener("DOMContentLoaded", () => {
         total_sentences: data.total_sentences,
         total_characters: data.total_characters,
         keywords: data.keywords || [],
+        overall_sentiment: data.overall_sentiment,
+        sentiment_percentages: data.sentiment_percentages,
       };
 
       history.unshift(historyEntry);
 
-      localStorage.setItem("sentimentHistory", JSON.stringify(history));
+      localStorage.setItem(
+        "sentimentHistory",
+        JSON.stringify(history)
+      );
 
       console.log("SentimentAI processing results:", data);
 
-      alert("Text processing completed successfully!");
+      alert("Sentiment analysis completed successfully!");
+
     } catch (error) {
       console.error("SentimentAI error:", error);
       alert(error.message);
+
     } finally {
       analyzeBtn.disabled = false;
       analyzeBtn.textContent = "✦ Analyze Sentiment ›";

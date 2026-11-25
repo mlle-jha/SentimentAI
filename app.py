@@ -1,9 +1,6 @@
 
 """
-Minimal Flask API for the SentimentAI text-processing module.
-
-Run with:
-    python app.py
+SentimentAI - Flask Application
 
 Text endpoint:
     POST /api/analyze
@@ -21,6 +18,7 @@ from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
 from text_processor import analyze_pdf, analyze_text
+from backend.sentiment_analyzer import analyze_sentiment
 
 
 # ==========================================
@@ -46,7 +44,6 @@ CORS(
     },
 )
 
-# Maximum PDF upload size: 15 MB
 app.config["MAX_CONTENT_LENGTH"] = 15 * 1024 * 1024
 
 
@@ -90,13 +87,25 @@ def analyze_manual_text():
     text = data.get("text", "")
 
     try:
+        # Process the original text.
         result = analyze_text(text)
+
+        # Classify the original text.
+        sentiment_result = analyze_sentiment(text)
+
+        # Combine processing and sentiment results.
+        result.update(sentiment_result)
+
         return jsonify(result)
 
     except (ValueError, TypeError) as error:
+        return jsonify({"error": str(error)}), 400
+
+    except Exception as error:
+        app.logger.exception("Text analysis failed.")
         return jsonify({
-            "error": str(error)
-        }), 400
+            "error": "An error occurred while analyzing the text."
+        }), 500
 
 
 # ==========================================
@@ -125,14 +134,25 @@ def analyze_uploaded_pdf():
             uploaded_file.save(temp_file)
             temp_path = Path(temp_file.name)
 
+        # Extract and process PDF contents.
         result = analyze_pdf(temp_path)
+
+        # Classify the original extracted text.
+        sentiment_result = analyze_sentiment(result["extracted_text"])
+
+        # Combine processing and sentiment results.
+        result.update(sentiment_result)
 
         return jsonify(result)
 
-    except (ValueError, FileNotFoundError) as error:
+    except (ValueError, FileNotFoundError, TypeError) as error:
+        return jsonify({"error": str(error)}), 400
+
+    except Exception as error:
+        app.logger.exception("PDF analysis failed.")
         return jsonify({
-            "error": str(error)
-        }), 400
+            "error": "An error occurred while analyzing the PDF."
+        }), 500
 
     finally:
         if temp_path and temp_path.exists():
