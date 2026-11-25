@@ -5,8 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const analyzeBtn = document.getElementById("analyzeBtn");
   const selectedFileName = document.getElementById("selectedFileName");
   const charCount = document.getElementById("charCount");
+  const pasteTab = document.getElementById("pasteTab");
+  const uploadTab = document.getElementById("uploadTab");
 
-  if (!manualText || !pdfUpload || !analyzeBtn) {
+  if (!manualText || !pdfUpload || !analyzeBtn ) {
     console.error("SentimentAI: Required HTML elements not found.");
     return;
   }
@@ -45,7 +47,27 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
+  // PASTE TEXT TAB
+  pasteTab.addEventListener("click", () => {
+    pasteTab.classList.add("active-tab");
+    uploadTab.classList.remove("active-tab");
 
+    pasteTab.setAttribute("aria-selected", "true");
+    uploadTab.setAttribute("aria-selected", "false");
+
+    manualText.focus();
+  });
+
+  // UPLOAD PDF TAB
+  uploadTab.addEventListener("click", () => {
+      uploadTab.classList.add("active-tab");
+      pasteTab.classList.remove("active-tab");
+
+      uploadTab.setAttribute("aria-selected", "true");
+      pasteTab.setAttribute("aria-selected", "false");
+
+      pdfUpload.click();
+  });
   // Analyze button
   analyzeBtn.addEventListener("click", async () => {
     const text = manualText.value.trim();
