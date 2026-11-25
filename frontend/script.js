@@ -1,96 +1,110 @@
-
 document.addEventListener("DOMContentLoaded", () => {
-    const manualText = document.getElementById("manualText");
-    const pdfUpload = document.getElementById("pdfUpload");
-    const analyzeBtn = document.getElementById("analyzeBtn");
+  const manualText = document.getElementById("manualText");
+  const pdfUpload = document.getElementById("pdfUpload");
+  const analyzeBtn = document.getElementById("analyzeBtn");
 
-    if (!manualText || !pdfUpload || !analyzeBtn) {
-        console.error("SentimentAI: Required HTML elements not found.");
-        return;
+  if (!manualText || !pdfUpload || !analyzeBtn) {
+    console.error("SentimentAI: Required HTML elements not found.");
+    return;
+  }
+
+  analyzeBtn.addEventListener("click", async () => {
+    const text = manualText.value.trim();
+    const pdf = pdfUpload.files[0];
+
+    if (!text && !pdf) {
+      alert("Please enter text or upload a PDF.");
+      return;
     }
 
-    analyzeBtn.addEventListener("click", async () => {
-        const text = manualText.value.trim();
-        const pdf = pdfUpload.files[0];
+    analyzeBtn.disabled = true;
+    analyzeBtn.textContent = "Processing...";
 
-        if (!text && !pdf) {
-            alert("Please enter text or upload a PDF.");
-            return;
-        }
+    try {
+      let response;
 
-        analyzeBtn.disabled = true;
-        analyzeBtn.textContent = "Processing...";
+      if (pdf) {
+        const formData = new FormData();
+        formData.append("file", pdf);
 
-        try {
-            let response;
+        response = await fetch("/api/analyze-pdf", {
+          method: "POST",
+          body: formData,
+        });
+      } else {
+        response = await fetch("/api/analyze", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ text }),
+        });
+      }
 
-            if (pdf) {
-                const formData = new FormData();
-                formData.append("file", pdf);
+      const data = await response.json();
 
-                response = await fetch("/api/analyze-pdf", {
-                    method: "POST",
-                    body: formData
-                });
-            } else {
-                response = await fetch("/api/analyze", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ text })
-                });
-            }
+      if (!response.ok) {
+        throw new Error(data.error || "Unable to process text.");
+      }
 
-            const data = await response.json();
+      // Update document statistics
+      document.getElementById("totalWords").textContent = data.total_words;
 
-            if (!response.ok) {
-                throw new Error(data.error || "Unable to process text.");
-            }
+      document.getElementById("totalSentences").textContent =
+        data.total_sentences;
 
-            // Update document statistics
-            document.getElementById("totalWords").textContent =
-                data.total_words;
+      document.getElementById("totalChars").textContent =
+        data.total_characters.toLocaleString();
 
-            document.getElementById("totalSentences").textContent =
-                data.total_sentences;
+      // Update keywords
+      const keywordsContainer = document.getElementById("keywordsContainer");
 
-            document.getElementById("totalChars").textContent =
-                data.total_characters.toLocaleString();
+      keywordsContainer.replaceChildren();
 
-            // Update keywords
-            const keywordsContainer =
-                document.getElementById("keywordsContainer");
+      (data.keywords || []).forEach((item) => {
+        const keyword = document.createElement("span");
+        keyword.className = "keyword-pill";
+        keyword.textContent = item.keyword;
+        keywordsContainer.appendChild(keyword);
+      });
 
-            keywordsContainer.replaceChildren();
+      // Update processing insights
+      const insights = document.getElementById("aiInsights");
 
-            (data.keywords || []).forEach(item => {
-                const keyword = document.createElement("span");
-                keyword.className = "keyword-pill";
-                keyword.textContent = item.keyword;
-                keywordsContainer.appendChild(keyword);
-            });
+      if (insights) {
+        insights.textContent =
+          "Text processing completed successfully. " +
+          "Your document is ready for sentiment classification.";
+      }
 
-            // Update processing insights
-            const insights = document.getElementById("aiInsights");
+      // SAVE ANALYSIS TO HISTORY
+      const history = JSON.parse(
+        localStorage.getItem("sentimentHistory") || "[]",
+      );
 
-            if (insights) {
-                insights.textContent =
-                    "Text processing completed successfully. " +
-                    "Your document is ready for sentiment classification.";
-            }
+      const historyEntry = {
+        date: new Date().toISOString(),
+        inputType: pdf ? "PDF Upload" : "Manual Text",
+        sourceName: pdf ? pdf.name : "Pasted Text",
+        total_words: data.total_words,
+        total_sentences: data.total_sentences,
+        total_characters: data.total_characters,
+        keywords: data.keywords || [],
+      };
 
-            console.log("SentimentAI processing results:", data);
+      history.unshift(historyEntry);
 
-            alert("Text processing completed successfully!");
+      localStorage.setItem("sentimentHistory", JSON.stringify(history));
 
-        } catch (error) {
-            console.error("SentimentAI error:", error);
-            alert(error.message);
+      console.log("SentimentAI processing results:", data);
 
-        } finally {
-            analyzeBtn.disabled = false;
-            analyzeBtn.textContent = "✦ Analyze Sentiment ›";
-        }
-    });
+      alert("Text processing completed successfully!");
+    } catch (error) {
+      console.error("SentimentAI error:", error);
+      alert(error.message);
+    } finally {
+      analyzeBtn.disabled = false;
+      analyzeBtn.textContent = "✦ Analyze Sentiment ›";
+    }
+  });
 });

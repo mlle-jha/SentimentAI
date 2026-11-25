@@ -22,8 +22,13 @@ from flask_cors import CORS
 
 from text_processor import analyze_pdf, analyze_text
 
+
+# ==========================================
 # APPLICATION CONFIGURATION
+# ==========================================
+
 BASE_DIR = Path(__file__).resolve().parent
+FRONTEND_DIR = BASE_DIR / "frontend"
 
 app = Flask(__name__)
 
@@ -44,22 +49,40 @@ CORS(
 # Maximum PDF upload size: 15 MB
 app.config["MAX_CONTENT_LENGTH"] = 15 * 1024 * 1024
 
+
+# ==========================================
 # FRONTEND ROUTES
+# ==========================================
+
 @app.get("/")
 def home():
-    return send_from_directory(BASE_DIR, "index.html")
+    return send_from_directory(FRONTEND_DIR, "index.html")
 
 
 @app.get("/style.css")
 def stylesheet():
-    return send_from_directory(BASE_DIR, "style.css")
+    return send_from_directory(FRONTEND_DIR, "style.css")
 
 
 @app.get("/script.js")
 def serve_script():
-    return send_from_directory(BASE_DIR, "script.js")
+    return send_from_directory(FRONTEND_DIR, "script.js")
 
+
+@app.get("/assets/<path:filename>")
+def serve_assets(filename):
+    return send_from_directory(FRONTEND_DIR / "assets", filename)
+
+
+@app.get("/<path:filename>")
+def serve_frontend_pages(filename):
+    return send_from_directory(FRONTEND_DIR, filename)
+
+
+# ==========================================
 # TEXT ANALYSIS API
+# ==========================================
+
 @app.post("/api/analyze")
 def analyze_manual_text():
 
@@ -71,9 +94,15 @@ def analyze_manual_text():
         return jsonify(result)
 
     except (ValueError, TypeError) as error:
-        return jsonify({"error": str(error)}), 400
+        return jsonify({
+            "error": str(error)
+        }), 400
 
+
+# ==========================================
 # PDF ANALYSIS API
+# ==========================================
+
 @app.post("/api/analyze-pdf")
 def analyze_uploaded_pdf():
 
@@ -101,20 +130,30 @@ def analyze_uploaded_pdf():
         return jsonify(result)
 
     except (ValueError, FileNotFoundError) as error:
-        return jsonify({"error": str(error)}), 400
+        return jsonify({
+            "error": str(error)
+        }), 400
 
     finally:
         if temp_path and temp_path.exists():
             temp_path.unlink()
 
-# ERROR HANDLER
+
+# ==========================================
+# ERROR HANDLERS
+# ==========================================
+
 @app.errorhandler(413)
 def file_too_large(error):
     return jsonify({
         "error": "File is too large. Maximum upload size is 15 MB."
     }), 413
 
+
+# ==========================================
 # RUN APPLICATION
+# ==========================================
+
 if __name__ == "__main__":
     app.run(
         host="127.0.0.1",
