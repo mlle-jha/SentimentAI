@@ -173,16 +173,23 @@
                 <div class="hero-text">
                     <h3>System Overview</h3>
                     <h1>About SentimentAI</h1>
-                    <p>NLP &amp; Transformer-Based Sentiment Analysis Tool</p>
+                    <p>AI-Powered Sentiment Analysis &amp; Opinion Mining Web Application</p>
                 </div>
                 <div class="hero-graphic">ℹ️</div>
             </header>
 
+            <section class="panel" style="margin-bottom: 1.2rem;">
+                <h4 style="margin-bottom: 0.75rem;">Project Overview</h4>
+                <p style="color: #e2d5dc; font-size: 0.92rem; line-height: 1.65;">
+                    SentimentAI is an AI-powered sentiment analysis web application designed to help users understand and interpret opinions, feedback, and textual information. The system provides a convenient platform for analyzing written content through two input methods: manually entering text or uploading PDF documents. By integrating Natural Language Processing (NLP) techniques, the application processes textual data and identifies patterns to help users better understand the underlying opinions and sentiments expressed in the content.
+                </p>
+            </section>
+
             <div class="results-grid">
                 <div class="panel result-card">
-                    <h4>What It Does</h4>
+                    <h4>Input Methods</h4>
                     <p style="color: var(--text-gray); font-size: 0.85rem; line-height: 1.5;">
-                        SentimentAI extracts selectable text from manual inputs or PDF files and classifies overall tone into Positive, Neutral, or Negative opinions.
+                        Supports both direct manual text entry and selectable PDF document uploads for flexible content analysis.
                     </p>
                 </div>
                 <div class="panel result-card">
@@ -192,8 +199,8 @@
                     <p style="font-size: 0.85rem;">• <strong>AI Model:</strong> Hugging Face DistilBERT</p>
                 </div>
                 <div class="insights-card">
-                    <div class="insight-title">✦ Scope &amp; Limitations</div>
-                    <p>Supports English text and selectable PDF documents with negation-aware preprocessing.</p>
+                    <div class="insight-title">✦ Key Capabilities</div>
+                    <p>Extracts text statistics, identifies frequent keywords, and classifies overall sentiment into Positive, Neutral, or Negative.</p>
                 </div>
             </div>
         </div>
@@ -203,25 +210,3 @@
                 <div class="hero-text">
                     <h3>Activity Log</h3>
                     <h1>History Dashboard</h1>
-                    <p>Review Previously Analyzed Texts &amp; PDF Documents</p>
-                </div>
-                <div class="hero-graphic">🕒</div>
-            </header>
-
-            <section class="panel">
-                <h4 style="margin-bottom: 1rem;">Recent Analyses</h4>
-                <table class="history-table">
-                    <thead>
-                        <tr>
-                            <th>Document / Text</th>
-                            <th>Type</th>
-                            <th>Words</th>
-                            <th>Sentiment</th>
-                            <th>Score</th>
-                        </tr>
-                    </thead>
-                    <tbody id="historyTableBody">
-                        <tr>
-                            <td>Customer_Feedback.pdf</td>
-                            <td>PDF</td>
-                            <td>1,248</td>
