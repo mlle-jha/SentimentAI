@@ -1,0 +1,246 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History - SentimentAI</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <div class="app-shell">
+
+        <aside class="sidebar">
+            <div class="sidebar-top">
+
+                <div class="sidebar-heading">
+                    <a class="brand" href="/" aria-label="SentimentAI home">
+                        <div class="hero-header">
+                            <h1>Sentiment<span>AI</span></h1>
+                        </div>
+                        <span>learn, analyze, understand</span>
+                    </a>
+
+                    <button type="button" class="menu-toggle"
+                        id="menuToggle" aria-label="Open menu"
+                        aria-controls="navMenu" aria-expanded="false">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+
+                <nav class="nav-menu" id="navMenu" aria-label="Main navigation">
+                    <a href="/#analyze" class="nav-link" data-page="analyze">
+                        <img src="/assets/analytics.png" alt="" class="icon">
+                        <span>Analyze</span>
+                    </a>
+
+                    <a href="/about.html" class="nav-link" data-page="about">
+                        <img src="/assets/about.png" alt="" class="icon">
+                        <span>About</span>
+                    </a>
+
+                    <a href="/history.html" class="nav-link active" data-page="history">
+                        <img src="/assets/history.png" alt="" class="icon">
+                        <span>History</span>
+                    </a>
+                </nav>
+            </div>
+
+            <div class="sidebar-bottom">
+                <p>Turn Opinions<br>into Insights</p>
+            </div>
+        </aside>
+
+
+        <main class="main-wrapper">
+
+            <header class="hero-section">
+                <div class="hero-text">
+                    <h1>History</h1>
+                </div>
+
+                <div class="hero-words">
+                    <img src="/assets/learn.png"
+                        alt="Learn, analyze, understand"
+                        class="hero-tags">
+                </div>
+            </header>
+
+
+            <section class="panel input-panel history-panel">
+
+                <div class="history-header">
+                    <div>
+                        <h2>Previous Analyses</h2>
+                        <p>View your previously processed documents and text.</p>
+                    </div>
+
+                    <span class="history-count" id="historyCount">
+                        0 Records
+                    </span>
+                </div>
+
+                <div class="history-list" id="historyList">
+
+                    <div class="history-empty">
+                        <img src="/assets/history.png" alt="">
+                        <h3>No Analysis History Yet</h3>
+                        <p>
+                            Your previously analyzed text and PDF documents
+                            will appear here.
+                        </p>
+                        <a href="/#analyze" class="history-analyze-link">
+                            Start Analyzing
+                        </a>
+                    </div>
+
+                </div>
+
+                <div class="history-footer">
+                    <button type="button" id="clearHistoryBtn"
+                        class="clear-history-btn" disabled>
+                        Clear History
+                    </button>
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+
+
+    <script>
+        const menuToggle = document.getElementById("menuToggle");
+        const navMenu = document.getElementById("navMenu");
+
+        function setMenu(open) {
+            navMenu.classList.toggle("is-open", open);
+            menuToggle.classList.toggle("is-active", open);
+            menuToggle.setAttribute("aria-expanded", open);
+            menuToggle.setAttribute(
+                "aria-label",
+                open ? "Close menu" : "Open menu"
+            );
+        }
+
+        menuToggle.addEventListener("click", () => {
+            setMenu(!navMenu.classList.contains("is-open"));
+        });
+
+        navMenu.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => setMenu(false));
+        });
+
+
+        // LOAD SAVED HISTORY
+        const historyList = document.getElementById("historyList");
+        const historyCount = document.getElementById("historyCount");
+        const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+
+        function loadHistory() {
+            const history = JSON.parse(
+                localStorage.getItem("sentimentHistory") || "[]"
+            );
+
+            historyCount.textContent =
+                `${history.length} ${history.length === 1 ? "Record" : "Records"}`;
+
+            clearHistoryBtn.disabled = history.length === 0;
+
+            historyList.replaceChildren();
+
+            if (history.length === 0) {
+                historyList.innerHTML = `
+                    <div class="history-empty">
+                        <img src="/assets/history.png" alt="">
+                        <h3>No Analysis History Yet</h3>
+                        <p>
+                            Your previously analyzed text and PDF documents
+                            will appear here.
+                        </p>
+                        <a href="/#analyze" class="history-analyze-link">
+                            Start Analyzing
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            history.forEach(item => {
+                const card = document.createElement("article");
+                card.className = "history-item";
+
+                const date = new Date(item.date);
+                const formattedDate = isNaN(date.getTime())
+                    ? "Date unavailable"
+                    : date.toLocaleString();
+
+                const title = document.createElement("h3");
+                title.textContent = item.sourceName || "Untitled Analysis";
+
+                const meta = document.createElement("p");
+                meta.className = "history-meta";
+                meta.textContent =
+                    `${item.inputType || "Text"} • ${formattedDate}`;
+
+                const stats = document.createElement("div");
+                stats.className = "history-stats";
+
+                const values = [
+                    ["Words", item.total_words],
+                    ["Sentences", item.total_sentences],
+                    ["Characters", item.total_characters]
+                ];
+
+                values.forEach(([label, value]) => {
+                    const stat = document.createElement("div");
+                    stat.className = "history-stat";
+
+                    const statLabel = document.createElement("span");
+                    statLabel.textContent = label;
+
+                    const statValue = document.createElement("strong");
+                    statValue.textContent =
+                        Number(value || 0).toLocaleString();
+
+                    stat.append(statLabel, statValue);
+                    stats.appendChild(stat);
+                });
+
+                const keywords = document.createElement("p");
+                keywords.className = "history-keywords";
+
+                const keywordNames = (item.keywords || [])
+                    .map(keyword => keyword.keyword)
+                    .filter(Boolean);
+
+                keywords.textContent = keywordNames.length
+                    ? `Keywords: ${keywordNames.join(", ")}`
+                    : "No keywords recorded.";
+
+                card.append(title, meta, stats, keywords);
+                historyList.appendChild(card);
+            });
+        }
+
+
+        // CLEAR HISTORY
+        clearHistoryBtn.addEventListener("click", () => {
+            const confirmed = confirm(
+                "Are you sure you want to clear all analysis history?"
+            );
+
+            if (!confirmed) return;
+
+            localStorage.removeItem("sentimentHistory");
+            loadHistory();
+        });
+
+        loadHistory();
+    </script>
+
+</body>
+</html>

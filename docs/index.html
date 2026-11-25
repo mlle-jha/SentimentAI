@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SentimentAI - AI-Powered Sentiment Analysis</title>
+
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+
+  <body>
+    <div class="app-shell">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-top">
+          <div class="sidebar-heading">
+            <a class="brand" href="/" aria-label="SentimentAI home">
+              <div class="hero-header">
+                <h1>Sentiment<span>AI</span></h1>
+              </div>
+              <span>learn, analyze, understand</span>
+            </a>
+
+            <button
+              type="button"
+              class="menu-toggle"
+              id="menuToggle"
+              aria-label="Open menu"
+              aria-controls="navMenu"
+              aria-expanded="false">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+
+          <nav class="nav-menu" id="navMenu" aria-label="Main navigation">
+            <a href="/#analyze" class="nav-link active" data-page="analyze">
+              <img src="/assets/analytics.png" alt="" class="icon" />
+              <span>Analyze</span>
+            </a>
+
+            <a href="/about.html" class="nav-link" data-page="about">
+              <img src="/assets/about.png" alt="" class="icon" />
+              <span>About</span>
+            </a>
+
+            <a href="/history.html" class="nav-link" data-page="history">
+              <img src="/assets/history.png" alt="" class="icon" />
+              <span>History</span>
+            </a>
+          </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+          <p>Turn Opinions<br />into Insights</p>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="main-wrapper" id="home">
+        <!-- HERO SECTION -->
+        <header class="hero-section">
+          <div class="hero-text">
+            <h1>Sentiment<span>AI</span></h1>
+          </div>
+
+          <div class="hero-words">
+            <img
+              src="/assets/learn.png"
+              alt="Learn, analyze, understand"
+              class="hero-tags" />
+          </div>
+        </header>
+
+        <!-- INPUT PANEL -->
+        <section class="panel input-panel" id="analyze">
+          <div
+            class="tab-header"
+            role="tablist"
+            aria-label="Choose input method">
+            <button
+              type="button"
+              class="tab active-tab"
+              id="pasteTab"
+              role="tab"
+              aria-selected="true">
+              <img src="/assets/paste.png" alt="" />
+              Paste Text
+            </button>
+
+            <button
+              type="button"
+              class="tab"
+              id="uploadTab"
+              role="tab"
+              aria-selected="false">
+              <img src="/assets/upload.png" alt="" />
+              Upload PDF
+            </button>
+          </div>
+
+          <div class="input-split">
+            <!-- TEXT INPUT -->
+            <div class="text-box-wrapper">
+              <textarea
+                id="manualText"
+                maxlength="5000"
+                placeholder="Type or paste your text here..."
+                aria-label="Text to analyze"></textarea>
+
+              <div class="text-box-footer">
+                <span class="input-hint">
+                  Enter text to begin your analysis.
+                </span>
+
+                <span class="char-limit"> <b id="charCount">0</b>/5000 </span>
+              </div>
+            </div>
+
+            <!-- OR DIVIDER -->
+            <div class="or-badge" aria-hidden="true"></div>
+
+            <!-- PDF UPLOAD -->
+            <label class="pdf-dropzone" id="dropZone" for="pdfUpload">
+              <input
+                type="file"
+                id="pdfUpload"
+                accept=".pdf,application/pdf"
+                hidden />
+
+              <img src="/assets/drag.png" alt="" class="upload-icon" />
+
+              <p class="drop-title">Upload &amp; drop your PDF here</p>
+
+              <span class="drop-sub" id="selectedFileName">
+                PDF files only
+              </span>
+            </label>
+          </div>
+
+          <!-- ANALYZE BUTTON -->
+          <div class="action-row">
+            <button type="button" class="analyze-btn" id="analyzeBtn">
+              ✦ Analyze Sentiment ›
+            </button>
+          </div>
+
+          <p
+            class="status-message"
+            id="statusMessage"
+            role="status"
+            aria-live="polite"></p>
+        </section>
+
+        <!-- RESULTS SECTION -->
+        <section class="results-grid" aria-label="Sentiment analysis results">
+          <!-- OVERVIEW CARD -->
+          <article class="panel result-card overview-card">
+            <h4>
+              <img src="/assets/analytics.png" alt="" />
+              Overview
+            </h4>
+
+            <div class="sentiment-body">
+              <div
+                class="donut-ring"
+                id="sentimentChart"
+                style="background: conic-gradient(#d7c8db 0% 100%)">
+                <div class="donut-hole">
+                  <span class="donut-sub"> Overall<br />Sentiment </span>
+
+                  <strong class="donut-main" id="overallSentiment">
+                    ---
+                  </strong>
+                </div>
+              </div>
+
+              <ul class="legend-list" id="overviewLegend">
+                <li>
+                  <span class="dot dot-pos"></span>
+                  <span class="lbl">Positive</span>
+                  <strong id="posPercent">--</strong>
+                </li>
+
+                <li>
+                  <span class="dot dot-neu"></span>
+                  <span class="lbl">Neutral</span>
+                  <strong id="neuPercent">--</strong>
+                </li>
+
+                <li>
+                  <span class="dot dot-neg"></span>
+                  <span class="lbl">Negative</span>
+                  <strong id="negPercent">--</strong>
+                </li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="result-card statistics-card">
+            <h4>Key Statistics</h4>
+
+            <div class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-label">Total Words</span>
+                <strong id="totalWords">0</strong>
+              </div>
+
+              <div class="stat-item">
+                <span class="stat-label">Stop Words</span>
+                <strong id="stopWords">0</strong>
+              </div>
+
+              <div class="stat-item">
+                <span class="stat-label">Meaningful Words</span>
+                <strong id="meaningfulWords">0</strong>
+              </div>
+
+              <div class="stat-item">
+                <span class="stat-label">Total Sentences</span>
+                <strong id="totalSentences">0</strong>
+              </div>
+
+              <div class="stat-item">
+                <span class="stat-label">Total Characters</span>
+                <strong id="totalChars">0</strong>
+              </div>
+            </div>
+          </article>
+
+          <!-- RIGHT COLUMN -->
+          <div class="right-column">
+            <!-- KEYWORDS CARD -->
+            <article class="panel result-card keywords-card">
+              <h4 class="keywords-heading">Top Keywords</h4>
+
+              <div class="pill-container" id="keywordsContainer">
+                <span class="empty-result"> No keywords yet </span>
+              </div>
+            </article>
+
+            <!-- AI INSIGHTS CARD -->
+            <article class="insights-card">
+              <h4 class="insight-title">AI Insights</h4>
+
+              <p id="aiInsights">
+                Your AI-generated sentiment interpretation will appear here
+                after analysis.
+              </p>
+            </article>
+          </div>
+        </section>
+        
+        <!-- TEXT SUMMARY -->
+        <section class="details-grid">
+            <article class="detail-card summary-card">
+                <h4>Text Summary</h4>
+                <p id="textSummary">
+                    Your document summary will appear here after analysis.
+                </p>
+            </article>
+        </section>
+
+    <!-- JAVASCRIPT -->
+    <script src="/script.js"></script>
+
+    <script>
+      const menuToggle = document.getElementById("menuToggle");
+      const navMenu = document.getElementById("navMenu");
+
+      function setMenu(open) {
+        navMenu.classList.toggle("is-open", open);
+        menuToggle.classList.toggle("is-active", open);
+
+        menuToggle.setAttribute("aria-expanded", open);
+        menuToggle.setAttribute(
+          "aria-label",
+          open ? "Close menu" : "Open menu",
+        );
+      }
+
+      menuToggle.addEventListener("click", () => {
+        setMenu(!navMenu.classList.contains("is-open"));
+      });
+
+      navMenu.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => setMenu(false));
+      });
+
+      // Character counter
+      const manualText = document.getElementById("manualText");
+      const charCount = document.getElementById("charCount");
+
+      manualText.addEventListener("input", () => {
+        charCount.textContent = manualText.value.length;
+      });
+    </script>
+  </body>
+</html>
