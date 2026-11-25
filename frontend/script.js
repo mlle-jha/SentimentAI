@@ -16,22 +16,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const file = pdfUpload.files[0];
 
     if (file) {
-      // Clear manual text when a PDF is selected
       manualText.value = "";
 
       if (charCount) {
         charCount.textContent = "0";
       }
 
-      selectedFileName.textContent = `Selected: ${file.name}`;
-    } else {
+      if (selectedFileName) {
+        selectedFileName.textContent = `Selected: ${file.name}`;
+      }
+    } else if (selectedFileName) {
       selectedFileName.textContent = "PDF files only";
     }
   });
 
   // Handle manual text input
   manualText.addEventListener("input", () => {
-    // Update character counter
     if (charCount) {
       charCount.textContent = manualText.value.length;
     }
@@ -39,7 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // Clear PDF selection when user starts typing
     if (manualText.value.trim() && pdfUpload.files.length > 0) {
       pdfUpload.value = "";
-      selectedFileName.textContent = "PDF files only";
+
+      if (selectedFileName) {
+        selectedFileName.textContent = "PDF files only";
+      }
     }
   });
 
@@ -85,28 +88,59 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error(data.error || "Unable to process text.");
       }
 
-      // Update document statistics
-      document.getElementById("totalWords").textContent = data.total_words;
+      // =====================================
+      // UPDATE KEY STATISTICS
+      // =====================================
 
-      document.getElementById("totalSentences").textContent =
-        data.total_sentences;
+      const statistics = {
+        totalWords: data.total_words ?? 0,
+        stopWords: data.total_stop_words ?? 0,
+        meaningfulWords: data.total_meaningful_words ?? 0,
+        totalSentences: data.total_sentences ?? 0,
+        totalChars: Number(data.total_characters || 0).toLocaleString(),
+      };
 
-      document.getElementById("totalChars").textContent =
-        data.total_characters.toLocaleString();
+      Object.entries(statistics).forEach(([id, value]) => {
+        const element = document.getElementById(id);
 
-      // Update keywords
-      const keywordsContainer = document.getElementById("keywordsContainer");
-
-      keywordsContainer.replaceChildren();
-
-      (data.keywords || []).forEach((item) => {
-        const keyword = document.createElement("span");
-        keyword.className = "keyword-pill";
-        keyword.textContent = item.keyword;
-        keywordsContainer.appendChild(keyword);
+        if (element) {
+          element.textContent = value;
+        }
       });
 
-      // Update sentiment overview
+      // =====================================
+      // UPDATE TEXT SUMMARY
+      // =====================================
+
+      const summaryElement = document.getElementById("textSummary");
+
+      if (summaryElement) {
+        summaryElement.textContent =
+          data.summary ||
+          "A summary could not be generated for this document.";
+      }
+
+      // =====================================
+      // UPDATE KEYWORDS
+      // =====================================
+
+      const keywordsContainer = document.getElementById("keywordsContainer");
+
+      if (keywordsContainer) {
+        keywordsContainer.replaceChildren();
+
+        (data.keywords || []).forEach((item) => {
+          const keyword = document.createElement("span");
+          keyword.className = "keyword-pill";
+          keyword.textContent = item.keyword;
+          keywordsContainer.appendChild(keyword);
+        });
+      }
+
+      // =====================================
+      // UPDATE SENTIMENT OVERVIEW
+      // =====================================
+
       const percentages = data.sentiment_percentages;
 
       if (!percentages || !data.overall_sentiment) {
@@ -131,24 +165,29 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("negPercent").textContent =
         `${negative.toFixed(2)}%`;
 
-      // Update donut chart using existing CSS colors
+      // Update donut chart
       const sentimentChart = document.getElementById("sentimentChart");
 
-      const lime = getComputedStyle(document.documentElement)
-        .getPropertyValue("--lime")
-        .trim();
+      if (sentimentChart) {
+        const lime = getComputedStyle(document.documentElement)
+          .getPropertyValue("--lime")
+          .trim();
 
-      const pink = getComputedStyle(document.documentElement)
-        .getPropertyValue("--pink")
-        .trim();
+        const pink = getComputedStyle(document.documentElement)
+          .getPropertyValue("--pink")
+          .trim();
 
-      sentimentChart.style.background = `conic-gradient(
-        ${lime} 0% ${positive}%,
-        #d7c8db ${positive}% ${positive + neutral}%,
-        ${pink} ${positive + neutral}% 100%
-      )`;
+        sentimentChart.style.background = `conic-gradient(
+          ${lime} 0% ${positive}%,
+          #d7c8db ${positive}% ${positive + neutral}%,
+          ${pink} ${positive + neutral}% 100%
+        )`;
+      }
 
-      // Update AI insights
+      // =====================================
+      // UPDATE AI INSIGHTS
+      // =====================================
+
       const insights = document.getElementById("aiInsights");
 
       if (insights) {
@@ -157,7 +196,10 @@ document.addEventListener("DOMContentLoaded", () => {
           "Sentiment analysis completed successfully.";
       }
 
-      // Save analysis to history
+      // =====================================
+      // SAVE ANALYSIS TO HISTORY
+      // =====================================
+
       const history = JSON.parse(
         localStorage.getItem("sentimentHistory") || "[]"
       );
@@ -167,8 +209,11 @@ document.addEventListener("DOMContentLoaded", () => {
         inputType: pdf ? "PDF Upload" : "Manual Text",
         sourceName: pdf ? pdf.name : "Pasted Text",
         total_words: data.total_words,
+        total_stop_words: data.total_stop_words ?? 0,
+        total_meaningful_words: data.total_meaningful_words ?? 0,
         total_sentences: data.total_sentences,
         total_characters: data.total_characters,
+        summary: data.summary || "",
         keywords: data.keywords || [],
         overall_sentiment: data.overall_sentiment,
         sentiment_percentages: data.sentiment_percentages,
