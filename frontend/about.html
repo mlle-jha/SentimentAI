@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - SentimentAI</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <div class="app-shell">
+
+        <aside class="sidebar">
+            <div class="sidebar-top">
+
+                <div class="sidebar-heading">
+                    <a class="brand" href="/" aria-label="SentimentAI home">
+                        <div class="hero-header">
+                            <h1>Sentiment<span>AI</span></h1>
+                        </div>
+                        <span>learn, analyze, understand</span>
+                    </a>
+
+                    <button type="button" class="menu-toggle"
+                        id="menuToggle" aria-label="Open menu"
+                        aria-controls="navMenu" aria-expanded="false">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+
+                <nav class="nav-menu" id="navMenu" aria-label="Main navigation">
+                    <a href="/#analyze" class="nav-link" data-page="analyze">
+                        <img src="/assets/analytics.png" alt="" class="icon">
+                        <span>Analyze</span>
+                    </a>
+
+                    <a href="/about.html" class="nav-link active" data-page="about">
+                        <img src="/assets/about.png" alt="" class="icon">
+                        <span>About</span>
+                    </a>
+
+                    <a href="/history.html" class="nav-link" data-page="history">
+                        <img src="/assets/history.png" alt="" class="icon">
+                        <span>History</span>
+                    </a>
+                </nav>
+            </div>
+
+            <div class="sidebar-bottom">
+                <p>Turn Opinions<br>into Insights</p>
+            </div>
+        </aside>
+
+
+        <main class="main-wrapper">
+
+            <header class="hero-section">
+                <div class="hero-text">
+                    <h1>About <span>Us</span></h1>
+                </div>
+
+                <div class="hero-words">
+                    <img src="/assets/learn.png"
+                        alt="Learn, analyze, understand"
+                        class="hero-tags">
+                </div>
+            </header>
+
+
+            <section class="panel input-panel about-panel">
+
+                <div class="about-content">
+
+                    <h2>What is SentimentAI?</h2>
+
+                    <p>
+                        SentimentAI is an AI-powered sentiment analysis web
+                        application. It is designed to help users understand
+                        and interpret opinions, feedback, and textual
+                        information.
+                    </p>
+
+                    <p>
+                        The system provides users with a convenient platform
+                        for analyzing written content through two input
+                        methods: manually entering text or uploading PDF
+                        documents.
+                    </p>
+
+                    <p>
+                        By integrating Natural Language Processing (NLP)
+                        techniques, the web application processes textual
+                        data and identifies patterns that can help users
+                        better understand the opinions and sentiments
+                        expressed in the provided content.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <section class="results-grid about-features">
+
+                <article class="panel result-card">
+                    <h4>Text Analysis</h4>
+                    <p>
+                        Enter or paste written content directly into the
+                        application for text processing and analysis.
+                    </p>
+                </article>
+
+                <article class="panel result-card">
+                    <h4>PDF Upload</h4>
+                    <p>
+                        Upload PDF documents to extract and process their
+                        textual content.
+                    </p>
+                </article>
+
+                <article class="panel result-card">
+                    <h4>NLP Technology</h4>
+                    <p>
+                        Apply Natural Language Processing techniques to
+                        identify patterns and useful information in text.
+                    </p>
+                </article>
+
+            </section>
+
+        </main>
+    </div>
+
+
+    <script>
+        const menuToggle = document.getElementById("menuToggle");
+        const navMenu = document.getElementById("navMenu");
+
+        function setMenu(open) {
+            navMenu.classList.toggle("is-open", open);
+            menuToggle.classList.toggle("is-active", open);
+            menuToggle.setAttribute("aria-expanded", open);
+            menuToggle.setAttribute(
+                "aria-label",
+                open ? "Close menu" : "Open menu"
+            );
+        }
+
+        menuToggle.addEventListener("click", () => {
+            setMenu(!navMenu.classList.contains("is-open"));
+        });
+
+        navMenu.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => setMenu(false));
+        });
+    </script>
+
+</body>
+</html>
